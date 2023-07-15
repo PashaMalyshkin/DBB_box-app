@@ -15,6 +15,8 @@ module.exports = {
     'no-unused-vars': 0,
 
     // TypeScript
+    'no-shadow': 'off',
+    '@typescript-eslint/no-shadow': 'warn',
     '@typescript-eslint/no-unused-vars': ['error'],
     '@typescript-eslint/camelcase': 0,
     '@typescript-eslint/explicit-module-boundary-types': 0,

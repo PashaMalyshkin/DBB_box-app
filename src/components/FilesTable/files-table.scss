@@ -1,0 +1,24 @@
+.files-table {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__button {
+    cursor: pointer;
+    height: 100%;
+  }
+
+  &__cell-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__cell-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+  }
+}
