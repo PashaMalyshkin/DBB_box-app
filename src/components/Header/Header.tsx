@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import Link from '@mui/material/Link';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -65,14 +66,21 @@ export const Header = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
+          <Link
+            href="/"
+            underline="hover"
+            color="inherit"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
-            Drop Box
-          </Typography>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+            >
+              Drop Box
+            </Typography>
+          </Link>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />

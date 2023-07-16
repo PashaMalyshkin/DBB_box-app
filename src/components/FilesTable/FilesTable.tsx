@@ -1,4 +1,6 @@
-import * as React from 'react';
+import React, { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -6,23 +8,28 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { FC } from 'react';
-import { File } from '../../types/File';
+
 import { FolderIcon } from '../FolderIcon';
-import { formatDate } from '../../utils/formatDate';
 import { Loader } from '../Loader';
+
+import { File } from '../../types/File';
+import { formatDate } from '../../utils/formatDate';
 
 interface Props {
   filesToShow: File[];
-  onChangePath: (path: string) => void;
+  isLoading: boolean;
 }
 
-export const FilesTable: FC<Props> = ({ filesToShow, onChangePath }) => {
+export const FilesTable: FC<Props> = ({
+  filesToShow,
+  isLoading,
+}) => {
   const checkIsFolder = (fileTag: string) => fileTag === 'folder';
+  const navigate = useNavigate();
 
   const handleChangePath = (fileTag: string, path = '') => {
     if (checkIsFolder(fileTag)) {
-      onChangePath(path);
+      navigate(path);
     }
   };
 
@@ -32,7 +39,7 @@ export const FilesTable: FC<Props> = ({ filesToShow, onChangePath }) => {
 
   return (
     <div className="files-table">
-      {filesToShow.length ? (
+      {!isLoading ? (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="caption table">
             <TableHead>
