@@ -47,7 +47,7 @@ export const FolderBreadcrumbs = () => {
           href="/"
           underline="none"
           color="inherit"
-          css={getActiveBreadcrumb()}
+          style={getActiveBreadcrumb()}
         >
           Dropbox
         </Link>
