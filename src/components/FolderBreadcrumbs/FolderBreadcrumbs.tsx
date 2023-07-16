@@ -10,21 +10,25 @@ export const FolderBreadcrumbs = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setBreadcrumbs(pathname.split('/').filter(breadcrumb => breadcrumb));
+    const pathnameToBreadcrumbs = pathname
+      .split('/')
+      .filter(breadcrumb => breadcrumb);
+
+    setBreadcrumbs(pathnameToBreadcrumbs);
   }, [pathname]);
 
   const getActiveBreadcrumb = (index = -1) => {
-    if (index === breadcrumbs.length - 1 || pathname === '/') {
-      return {
-        color: '#000',
-        pointerEvents: 'none',
-      } as CSSProperties;
-    }
-
-    return {
+    const breadcrumbActiveStyles = {
       color: '#736c64',
       pointerEvents: 'auto',
     } as CSSProperties;
+
+    if (index === breadcrumbs.length - 1 || pathname === '/') {
+      breadcrumbActiveStyles.color = '#000';
+      breadcrumbActiveStyles.pointerEvents = 'none';
+    }
+
+    return breadcrumbActiveStyles;
   };
 
   const handleClick = (path: string) => {
@@ -32,7 +36,9 @@ export const FolderBreadcrumbs = () => {
       breadcrumb === path
     ));
 
-    const updatedPath = breadcrumbs.slice(0, indexToSlice + 1).join('/');
+    const updatedPath = breadcrumbs
+      .slice(0, indexToSlice + 1)
+      .join('/');
 
     navigate(updatedPath);
   };
@@ -42,7 +48,7 @@ export const FolderBreadcrumbs = () => {
       role="presentation"
       className="breadcrumbs"
     >
-      <Breadcrumbs aria-label="breadcrumb" sx={{ marginBottom: '30px ' }}>
+      <Breadcrumbs aria-label="breadcrumb">
         <Link
           href="/"
           underline="none"

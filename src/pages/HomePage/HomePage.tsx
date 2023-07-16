@@ -1,32 +1,32 @@
 import React, {
+  ChangeEvent,
   FC,
   useEffect,
   useState,
 } from 'react';
 
-import { Dropbox } from 'dropbox';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-// eslint-disable-next-line import/no-unresolved
-import ThumbnailArg from 'files';
-
 import { useLocation } from 'react-router-dom';
-import { Header } from '../../components/Header';
 import { FilesTable } from '../../components/FilesTable';
 import { FolderBreadcrumbs } from '../../components/FolderBreadcrumbs';
 
 import { FileErrorMessages } from '../../types/FileErrorMessages';
 import { File } from '../../types/File';
+import { ErrorAlert } from '../../components/ErrorAlert';
+import { Toolbar } from '../../components/Toolbar';
+import { dropbox } from '../../utils/createDropbox';
+// eslint-disable-next-line import/no-unresolved,import/extensions
+import { Thumbnail } from '../../file.js';
 
 export const HomePage:FC = () => {
   const [files, setFiles] = useState<File[]>([]);
+  const [filesToDelete, setFilesToDelete] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { pathname = '' } = useLocation();
-  const token = process.env.REACT_APP_ACCESS_TOKEN;
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isError, setIsError] = useState(false);
 
-  const dropbox = new Dropbox({
-    accessToken: token,
-  });
+  const { pathname = '' } = useLocation();
+  const hasFilesToDelete = filesToDelete.length > 0;
+
   const getPath = () => {
     return pathname === '/' ? '' : pathname;
   };
@@ -36,12 +36,12 @@ export const HomePage:FC = () => {
       setIsLoading(true);
       const dropboxResponse = await dropbox.filesListFolder({ path: getPath() });
       const filesList = dropboxResponse.result.entries as File[];
-      const paths = filesList.filter(file => file['.tag'] === 'file')
+      const paths: Thumbnail[] = filesList.filter(file => file['.tag'] === 'file')
         .map(file => ({
           path: file.path_lower,
           format: 'jpeg',
           size: 'w32h32',
-        })) as unknown as ThumbnailArg[];
+        }));
 
       const thumbnails = await dropbox.filesGetThumbnailBatch({
         entries: paths,
@@ -62,10 +62,40 @@ export const HomePage:FC = () => {
 
       setFiles(filesList);
     } catch {
-      throw new Error(FileErrorMessages.LOAD_FILES);
+      setErrorMessage(FileErrorMessages.LOAD_FILES);
+      setIsError(true);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const deleteFiles = async () => {
+    try {
+      await Promise.all(filesToDelete.map(path => (
+        dropbox.filesDeleteV2({ path })
+      )));
+    } catch {
+      setErrorMessage(FileErrorMessages.DELETE_FILES);
+      setIsError(true);
+    }
+
+    loadFiles();
+  };
+
+  const uploadFile = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    await dropbox.filesUpload({
+      path: `${pathname}/${file.name}`,
+      contents: file,
+      autorename: true,
+    });
+
+    loadFiles();
   };
 
   useEffect(() => {
@@ -74,14 +104,26 @@ export const HomePage:FC = () => {
 
   return (
     <>
-      <Header />
-      <div className="container">
-        <FolderBreadcrumbs />
-        <FilesTable
-          filesToShow={files}
-          isLoading={isLoading}
-        />
-      </div>
+      <FolderBreadcrumbs />
+
+      <Toolbar
+        hasFilesToDelete={hasFilesToDelete}
+        onDelete={deleteFiles}
+        onAdd={uploadFile}
+      />
+
+      <FilesTable
+        filesToShow={files}
+        filesToDelete={filesToDelete}
+        onDelete={setFilesToDelete}
+        isLoading={isLoading}
+      />
+
+      <ErrorAlert
+        isOpen={isError}
+        handleClose={() => setIsError(false)}
+        text={errorMessage}
+      />
     </>
   );
 };

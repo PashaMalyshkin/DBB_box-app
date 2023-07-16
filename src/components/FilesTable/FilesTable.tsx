@@ -9,6 +9,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
+import { Checkbox } from '@mui/material';
 import { FolderIcon } from '../FolderIcon';
 import { Loader } from '../Loader';
 
@@ -17,12 +18,16 @@ import { formatDate } from '../../utils/formatDate';
 
 interface Props {
   filesToShow: File[];
+  filesToDelete: string[],
+  onDelete: (paths: string[]) => void;
   isLoading: boolean;
 }
 
 export const FilesTable: FC<Props> = ({
   filesToShow,
   isLoading,
+  filesToDelete,
+  onDelete,
 }) => {
   const checkIsFolder = (fileTag: string) => fileTag === 'folder';
   const navigate = useNavigate();
@@ -30,6 +35,16 @@ export const FilesTable: FC<Props> = ({
   const handleChangePath = (fileTag: string, path = '') => {
     if (checkIsFolder(fileTag)) {
       navigate(path);
+    }
+  };
+
+  const handleDeleteFiles = (path: string) => {
+    if (filesToDelete.includes(path)) {
+      const filteredFiles = filesToDelete.filter(filePath => filePath !== path);
+
+      onDelete(filteredFiles);
+    } else {
+      onDelete([...filesToDelete, path]);
     }
   };
 
@@ -56,11 +71,15 @@ export const FilesTable: FC<Props> = ({
                     scope="row"
                   >
                     <div className="files-table__cell-content">
+                      <Checkbox
+                        onChange={() => handleDeleteFiles(file.path_display)}
+                        inputProps={{ 'aria-label': 'controlled' }}
+                      />
                       <div className="files-table__cell-image">
                         {!file.thumbnail ? (
                           <FolderIcon />
                         ) : (
-                          <img src={parseThumbnail(file.thumbnail || '')} alt={file.name} />
+                          <img src={parseThumbnail(file.thumbnail)} alt={file.name} />
                         )}
                       </div>
 
