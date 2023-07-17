@@ -16,14 +16,13 @@ import { Toolbar } from '../../components/Toolbar';
 import { dropbox } from '../../utils/createDropbox';
 // eslint-disable-next-line import/no-unresolved,import/extensions
 import { Thumbnail } from '../../file.js';
+import { useDropbox } from '../../providers/DropboxContext';
 
 export const HomePage:FC = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [filesToDelete, setFilesToDelete] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isError, setIsError] = useState(false);
-
+  const { setIsError, setErrorMessage } = useDropbox();
   const { pathname = '' } = useLocation();
   const hasFilesToDelete = filesToDelete.length > 0;
 
@@ -79,6 +78,7 @@ export const HomePage:FC = () => {
       setIsError(true);
     }
 
+    setFilesToDelete([]);
     loadFiles();
   };
 
@@ -89,13 +89,22 @@ export const HomePage:FC = () => {
       return;
     }
 
-    await dropbox.filesUpload({
-      path: `${pathname}/${file.name}`,
-      contents: file,
-      autorename: true,
-    });
+    const filePath = pathname === '/'
+      ? `${pathname}${file.name}`
+      : `${pathname}/${file.name}`;
 
-    loadFiles();
+    try {
+      await dropbox.filesUpload({
+        path: filePath,
+        contents: file,
+        autorename: true,
+      });
+    } catch {
+      setErrorMessage(FileErrorMessages.UPLOAD_FILE);
+      setIsError(true);
+    }
+
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -119,11 +128,7 @@ export const HomePage:FC = () => {
         isLoading={isLoading}
       />
 
-      <ErrorAlert
-        isOpen={isError}
-        handleClose={() => setIsError(false)}
-        text={errorMessage}
-      />
+      <ErrorAlert />
     </>
   );
 };

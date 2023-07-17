@@ -2,25 +2,19 @@ import * as React from 'react';
 import Alert from '@mui/material/Alert';
 import { FC } from 'react';
 import { Snackbar } from '@mui/material';
+import { useDropbox } from '../../providers/DropboxContext';
 
-interface Props {
-  text: string;
-  isOpen: boolean,
-  handleClose: () => void;
-}
+export const ErrorAlert: FC = () => {
+  const { isError, setIsError, errorMessage } = useDropbox();
+  const handleClose = () => setIsError(false);
 
-export const ErrorAlert: FC<Props> = ({
-  text,
-  isOpen,
-  handleClose,
-}) => {
   return (
     <Snackbar
-      open={isOpen}
+      open={isError}
       onClose={handleClose}
       autoHideDuration={6000}
     >
-      <Alert severity="error">{text}</Alert>
+      <Alert severity="error">{errorMessage}</Alert>
     </Snackbar>
   );
 };

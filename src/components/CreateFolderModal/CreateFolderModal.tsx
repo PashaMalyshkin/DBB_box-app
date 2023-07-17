@@ -5,17 +5,19 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import { Button, TextField } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useDropbox } from '../../providers/DropboxContext';
 import { dropbox } from '../../utils/createDropbox';
+import { FileErrorMessages } from '../../types/FileErrorMessages';
 
 const style = {
   position: 'absolute' as const,
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  minWidth: 300,
+  maxWidth: 400,
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,
@@ -24,20 +26,32 @@ const style = {
 
 export const CreateFolderModal = () => {
   const [folderName, setFolderName] = useState('');
-  const { isModalActive, setIsModalActive } = useDropbox();
+  const {
+    isModalActive,
+    setIsModalActive,
+    setErrorMessage,
+    setIsError,
+  } = useDropbox();
   const { pathname } = useLocation();
 
   const handleClose = () => setIsModalActive(false);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
     const folderPath = pathname === '/'
       ? `${pathname}${folderName}`
       : `${pathname}/${folderName}`;
 
-    await dropbox.filesCreateFolderV2({
-      path: folderPath,
-      autorename: true,
-    });
+    try {
+      await dropbox.filesCreateFolderV2({
+        path: folderPath,
+        autorename: true,
+      });
+    } catch {
+      setErrorMessage(FileErrorMessages.CREATE_FOLDER);
+      setIsError(true);
+    }
 
     window.location.reload();
   };

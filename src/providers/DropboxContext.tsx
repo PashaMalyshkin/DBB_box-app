@@ -1,22 +1,41 @@
-import { createContext, FC, useContext } from 'react';
+import {
+  createContext,
+  FC,
+  useContext,
+  useState,
+} from 'react';
 import * as React from 'react';
 
 interface DropboxContextValue {
-  isModalActive: boolean,
-  setIsModalActive: (value: boolean) => void;
+  isModalActive: boolean;
+  errorMessage: string;
+  isError: boolean;
+  setIsModalActive: (modalStatus: boolean) => void;
+  setErrorMessage: (errorMessage: string) => void;
+  setIsError: (errorStatus: boolean) => void;
 }
 
 export const DropboxContext = createContext<DropboxContextValue>({
   isModalActive: false,
+  errorMessage: '',
+  isError: false,
   setIsModalActive: () => {},
+  setIsError: () => {},
+  setErrorMessage: () => {},
 });
 
 export const DropboxContextProvider: FC = ({ children }) => {
   const [isModalActive, setIsModalActive] = React.useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isError, setIsError] = useState(false);
 
   const contextValue: DropboxContextValue = {
     isModalActive,
     setIsModalActive,
+    errorMessage,
+    isError,
+    setErrorMessage,
+    setIsError,
   };
 
   return (

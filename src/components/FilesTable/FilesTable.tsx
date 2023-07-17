@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { FC, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -30,6 +30,7 @@ export const FilesTable: FC<Props> = ({
   onDelete,
 }) => {
   const checkIsFolder = (fileTag: string) => fileTag === 'folder';
+  const { pathname } = useLocation();
   const navigate = useNavigate();
 
   const handleChangePath = (fileTag: string, path = '') => {
@@ -51,6 +52,10 @@ export const FilesTable: FC<Props> = ({
   const parseThumbnail = (thumbnail: string) => {
     return `data:image/jpeg;base64, ${thumbnail}`;
   };
+
+  useEffect(() => {
+    onDelete([]);
+  }, [pathname]);
 
   return (
     <div className="files-table">
