@@ -11,7 +11,6 @@ import { Dropbox } from 'dropbox';
 import { useLocation } from 'react-router-dom';
 import { File } from '../types/File';
 import { FileErrorMessages } from '../types/FileErrorMessages';
-// import DeleteResult = files.DeleteResult;
 
 interface DropboxContextValue {
   dropbox: Dropbox;
