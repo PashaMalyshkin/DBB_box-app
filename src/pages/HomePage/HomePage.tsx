@@ -1,5 +1,4 @@
 import React, {
-  ChangeEvent,
   FC,
   useEffect,
   useState,
@@ -13,18 +12,24 @@ import { FileErrorMessages } from '../../types/FileErrorMessages';
 import { File } from '../../types/File';
 import { ErrorAlert } from '../../components/ErrorAlert';
 import { Toolbar } from '../../components/Toolbar';
-import { dropbox } from '../../utils/createDropbox';
 // eslint-disable-next-line import/no-unresolved,import/extensions
 import { Thumbnail } from '../../file.js';
 import { useDropbox } from '../../providers/DropboxContext';
 
 export const HomePage:FC = () => {
-  const [files, setFiles] = useState<File[]>([]);
   const [filesToDelete, setFilesToDelete] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { setIsError, setErrorMessage } = useDropbox();
   const { pathname = '' } = useLocation();
   const hasFilesToDelete = filesToDelete.length > 0;
+
+  const {
+    setIsError,
+    setErrorMessage,
+    dropbox,
+    files,
+    setFiles,
+    // setDeletedFiles,
+  } = useDropbox();
 
   const getPath = () => {
     return pathname === '/' ? '' : pathname;
@@ -82,31 +87,6 @@ export const HomePage:FC = () => {
     loadFiles();
   };
 
-  const uploadFile = async (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-
-    if (!file) {
-      return;
-    }
-
-    const filePath = pathname === '/'
-      ? `${pathname}${file.name}`
-      : `${pathname}/${file.name}`;
-
-    try {
-      await dropbox.filesUpload({
-        path: filePath,
-        contents: file,
-        autorename: true,
-      });
-    } catch {
-      setErrorMessage(FileErrorMessages.UPLOAD_FILE);
-      setIsError(true);
-    }
-
-    window.location.reload();
-  };
-
   useEffect(() => {
     loadFiles();
   }, [pathname]);
@@ -118,7 +98,6 @@ export const HomePage:FC = () => {
       <Toolbar
         hasFilesToDelete={hasFilesToDelete}
         onDelete={deleteFiles}
-        onAdd={uploadFile}
       />
 
       <FilesTable

@@ -8,7 +8,6 @@ import Typography from '@mui/material/Typography';
 import { FormEvent, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useDropbox } from '../../providers/DropboxContext';
-import { dropbox } from '../../utils/createDropbox';
 import { FileErrorMessages } from '../../types/FileErrorMessages';
 
 const style = {
@@ -31,6 +30,7 @@ export const CreateFolderModal = () => {
     setIsModalActive,
     setErrorMessage,
     setIsError,
+    dropbox,
   } = useDropbox();
   const { pathname } = useLocation();
 
@@ -90,6 +90,7 @@ export const CreateFolderModal = () => {
                 type="submit"
                 variant="contained"
                 className="modal__button"
+                disabled={folderName.length === 0}
               >
                 Create
               </Button>

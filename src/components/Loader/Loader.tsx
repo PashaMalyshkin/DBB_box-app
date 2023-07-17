@@ -4,8 +4,10 @@ import Box from '@mui/material/Box';
 
 export const Loader = () => {
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CircularProgress />
-    </Box>
+    <div className="loader">
+      <Box sx={{ display: 'flex' }}>
+        <CircularProgress />
+      </Box>
+    </div>
   );
 };

@@ -15,6 +15,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
+import { Link } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -74,7 +75,12 @@ export const PageList = () => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Dropbox
+            <Link
+              to="/"
+              style={{ color: '#fff' }}
+            >
+              Dropbox
+            </Link>
           </Typography>
         </Toolbar>
       </AppBar>

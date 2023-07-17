@@ -1,20 +1,20 @@
-import React, { ChangeEvent, FC } from 'react';
+import React, { FC } from 'react';
 import { Button } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { BsFolderPlus } from 'react-icons/bs';
+import Typography from '@mui/material/Typography';
 import { useDropbox } from '../../providers/DropboxContext';
 
 interface Props {
   onDelete: () => void;
   hasFilesToDelete: boolean;
-  onAdd: (event: ChangeEvent<HTMLInputElement>) => Promise<void>;
 }
 
 export const Toolbar: FC<Props> = ({
   onDelete,
   hasFilesToDelete,
-  onAdd,
 }) => {
-  const { setIsModalActive } = useDropbox();
+  const { setIsModalActive, uploadFile } = useDropbox();
   const handleOpen = () => setIsModalActive(true);
 
   return (
@@ -35,7 +35,7 @@ export const Toolbar: FC<Props> = ({
           id="file"
           className="toolbar__input-file"
           type="file"
-          onChange={onAdd}
+          onChange={uploadFile}
         />
 
       </Button>
@@ -44,7 +44,10 @@ export const Toolbar: FC<Props> = ({
         variant="contained"
         onClick={handleOpen}
       >
-        Create Folder
+        <BsFolderPlus size={20} />
+        <Typography sx={{ fontSize: '0.875rem', marginLeft: '10px' }}>
+          Create Folder
+        </Typography>
       </Button>
 
       {hasFilesToDelete && (
