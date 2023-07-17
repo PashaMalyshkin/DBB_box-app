@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Link from '@mui/material/Link';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { CSSProperties, useEffect, useState } from 'react';
 
 export const FolderBreadcrumbs = () => {
@@ -50,9 +49,7 @@ export const FolderBreadcrumbs = () => {
     >
       <Breadcrumbs aria-label="breadcrumb">
         <Link
-          href="/"
-          underline="none"
-          color="inherit"
+          to="/"
           style={getActiveBreadcrumb()}
         >
           Dropbox
