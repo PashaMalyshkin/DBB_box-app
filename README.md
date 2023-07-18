@@ -1,13 +1,10 @@
-[DEMO LINK](https://pashamalyshkin.github.io/DBB_box-app/)
-
-
 # DropBox App
 
 Welcome to the Dropbox app! This web application allows you to explore add and delete files.
 
 ## Demo
 
-Check out the live demo of the project: [Dropbox](https://pashamalyshkin.github.io/DBB_box-app/)
+Check out the live demo of the project: [Dropbox](https://www.dropbox.com/oauth2/authorize?client_id=k56627zrptuzaqd&response_type=code&redirect_uri=https://pashamalyshkin.github.io/DBB_box-app/)
 
 ## Technologies Used
 
@@ -18,6 +15,7 @@ Check out the live demo of the project: [Dropbox](https://pashamalyshkin.github.
 - HTML5
 - SCSS
 - MUI
+- Node v14.18.2
 
 ## Getting Started
 
