@@ -2,7 +2,7 @@ import {
   ChangeEvent,
   createContext,
   FC,
-  useContext,
+  useContext, useEffect,
   useState,
 } from 'react';
 import * as React from 'react';
@@ -11,11 +11,12 @@ import { Dropbox } from 'dropbox';
 import { useLocation } from 'react-router-dom';
 import { File } from '../types/File';
 import { FileErrorMessages } from '../types/FileErrorMessages';
-import { getBearerToken } from '../api/getAccesToken';
+import { getBearerToken } from '../api/getToken';
 
 interface DropboxContextValue {
   dropbox: Dropbox;
   isModalActive: boolean;
+  isUploaderActive: boolean;
   errorMessage: string;
   isError: boolean;
   files: File[];
@@ -30,6 +31,7 @@ interface DropboxContextValue {
 export const DropboxContext = createContext<DropboxContextValue>({
   dropbox: new Dropbox(),
   isModalActive: false,
+  isUploaderActive: false,
   errorMessage: '',
   isError: false,
   files: [],
@@ -43,6 +45,7 @@ export const DropboxContext = createContext<DropboxContextValue>({
 
 export const DropboxContextProvider: FC = ({ children }) => {
   const [isModalActive, setIsModalActive] = React.useState(false);
+  const [isUploaderActive, setIsUploaderActive] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isError, setIsError] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
@@ -91,11 +94,26 @@ export const DropboxContextProvider: FC = ({ children }) => {
     window.location.reload();
   };
 
+  useEffect(() => {
+    if (!sessionStorage.getItem('accessToken')) {
+      loadToken();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (files.length === 0) {
+      setIsUploaderActive(true);
+    } else {
+      setIsUploaderActive(false);
+    }
+  }, [files]);
+
   const contextValue: DropboxContextValue = {
     dropbox,
     errorMessage,
     isError,
     isModalActive,
+    isUploaderActive,
     files,
     setFiles,
     setErrorMessage,

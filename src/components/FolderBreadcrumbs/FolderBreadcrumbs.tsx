@@ -9,7 +9,7 @@ export const FolderBreadcrumbs = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const pathnameToBreadcrumbs = pathname
+    const pathnameToBreadcrumbs = decodeURI(pathname)
       .split('/')
       .filter(breadcrumb => breadcrumb);
 

@@ -29,11 +29,10 @@ export const HomePage:FC = () => {
     dropbox,
     files,
     setFiles,
-    loadToken,
   } = useDropbox();
 
   const getPath = () => {
-    return pathname === '/' ? '' : pathname;
+    return pathname === '/' ? '' : decodeURI(pathname);
   };
 
   const loadFiles = async () => {
@@ -89,10 +88,6 @@ export const HomePage:FC = () => {
   };
 
   useEffect(() => {
-    if (!sessionStorage.getItem('accessToken')) {
-      loadToken();
-    }
-
     loadFiles();
   }, [pathname, token]);
 

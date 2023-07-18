@@ -1,4 +1,5 @@
 import { client } from '../utils/fetchClient';
+import { BearerToken } from '../types/BearerToken';
 
 const client_secret = 'aqy91zqawycph9p';
 const client_id = 'k56627zrptuzaqd';
@@ -12,5 +13,5 @@ const accessOptions = {
 };
 
 export const getBearerToken = (code: string) => {
-  return client.post<any>('https://api.dropbox.com/oauth2/token', `code=${code}&${Object.entries(accessOptions).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&')}`);
+  return client.post<BearerToken>('https://api.dropbox.com/oauth2/token', `code=${code}&${Object.entries(accessOptions).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&')}`);
 };

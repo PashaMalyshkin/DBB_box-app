@@ -17,6 +17,7 @@ import { File } from '../../types/File';
 import { formatDate } from '../../utils/formatDate';
 import { parseThumbnail } from '../../utils/parseThumbnail';
 import { Uploader } from '../Uploader';
+import { useDropbox } from '../../providers/DropboxContext';
 
 interface Props {
   filesToShow: File[];
@@ -33,6 +34,7 @@ export const FilesTable: FC<Props> = ({
 }) => {
   const checkIsFolder = (fileTag: string) => fileTag === 'folder';
   const { pathname } = useLocation();
+  const { isUploaderActive } = useDropbox();
   const navigate = useNavigate();
 
   const handleChangePath = (fileTag: string, path = '') => {
@@ -61,7 +63,9 @@ export const FilesTable: FC<Props> = ({
         <Loader />
       ) : (
         <>
-          {filesToShow.length ? (
+          {isUploaderActive ? (
+            <Uploader />
+          ) : (
             <TableContainer component={Paper}>
               <Table sx={{ minWidth: 650 }} aria-label="caption table">
                 <TableHead>
@@ -110,8 +114,6 @@ export const FilesTable: FC<Props> = ({
                 </TableBody>
               </Table>
             </TableContainer>
-          ) : (
-            <Uploader />
           )}
         </>
       )}
