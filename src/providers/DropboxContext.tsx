@@ -11,6 +11,7 @@ import { Dropbox } from 'dropbox';
 import { useLocation } from 'react-router-dom';
 import { File } from '../types/File';
 import { FileErrorMessages } from '../types/FileErrorMessages';
+import { getBearerToken } from '../api/getAccesToken';
 
 interface DropboxContextValue {
   dropbox: Dropbox;
@@ -23,6 +24,7 @@ interface DropboxContextValue {
   setIsError: (errorStatus: boolean) => void;
   setFiles: (files: File[]) => void;
   uploadFile: (event: ChangeEvent<HTMLInputElement>) => void;
+  loadToken: () => void;
 }
 
 export const DropboxContext = createContext<DropboxContextValue>({
@@ -36,6 +38,7 @@ export const DropboxContext = createContext<DropboxContextValue>({
   setIsError: () => {},
   setErrorMessage: () => {},
   uploadFile: () => {},
+  loadToken: () => {},
 });
 
 export const DropboxContextProvider: FC = ({ children }) => {
@@ -43,13 +46,24 @@ export const DropboxContextProvider: FC = ({ children }) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [isError, setIsError] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
-
   const { pathname } = useLocation();
 
-  const token = process.env.REACT_APP_ACCESS_TOKEN;
+  const loadToken = async () => {
+    const searchParams = new URLSearchParams(window.location.search);
+
+    const codeParam = searchParams.get('code');
+
+    if (codeParam) {
+      const response = await getBearerToken(codeParam);
+
+      sessionStorage.setItem('accessToken', response.access_token);
+    }
+
+    searchParams.delete('code');
+  };
 
   const dropbox = new Dropbox({
-    accessToken: token,
+    accessToken: sessionStorage.getItem('accessToken') || '',
   });
 
   const uploadFile = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -88,6 +102,7 @@ export const DropboxContextProvider: FC = ({ children }) => {
     setIsError,
     setIsModalActive,
     uploadFile,
+    loadToken,
   };
 
   return (

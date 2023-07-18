@@ -21,6 +21,7 @@ export const HomePage:FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { pathname = '' } = useLocation();
   const hasFilesToDelete = filesToDelete.length > 0;
+  const token = sessionStorage.getItem('accessToken');
 
   const {
     setIsError,
@@ -28,7 +29,7 @@ export const HomePage:FC = () => {
     dropbox,
     files,
     setFiles,
-    // setDeletedFiles,
+    loadToken,
   } = useDropbox();
 
   const getPath = () => {
@@ -88,8 +89,12 @@ export const HomePage:FC = () => {
   };
 
   useEffect(() => {
+    if (!sessionStorage.getItem('accessToken')) {
+      loadToken();
+    }
+
     loadFiles();
-  }, [pathname]);
+  }, [pathname, token]);
 
   return (
     <>
