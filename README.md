@@ -15,6 +15,7 @@ Check out the live demo of the project: [Dropbox](https://www.dropbox.com/oauth2
 - HTML5
 - SCSS
 - MUI
+- Node 14.18.2
 
 ## Getting Started
 
