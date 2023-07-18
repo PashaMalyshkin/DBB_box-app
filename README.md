@@ -1,4 +1,4 @@
-[DEMO LINK](https://pashamalyshkin.github.io/DBB_box-app/)
+[[DEMO LINK](https://www.dropbox.com/oauth2/authorize?client_id=k56627zrptuzaqd&response_type=code&redirect_uri=https://pashamalyshkin.github.io/DBB_box-app/)
 
 
 # DropBox App
@@ -7,7 +7,7 @@ Welcome to the Dropbox app! This web application allows you to explore add and d
 
 ## Demo
 
-Check out the live demo of the project: [Dropbox](https://pashamalyshkin.github.io/DBB_box-app/)
+Check out the live demo of the project: [Dropbox](https://www.dropbox.com/oauth2/authorize?client_id=k56627zrptuzaqd&response_type=code&redirect_uri=https://pashamalyshkin.github.io/DBB_box-app/)
 
 ## Technologies Used
 
