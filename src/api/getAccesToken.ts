@@ -2,7 +2,7 @@ import { client } from '../utils/fetchClient';
 
 const client_secret = 'aqy91zqawycph9p';
 const client_id = 'k56627zrptuzaqd';
-const redirect_uri = 'https://pashamalyshkin.github.io';
+const redirect_uri = 'https://pashamalyshkin.github.io/DBB_box-app/';
 
 const accessOptions = {
   grant_type: 'authorization_code',
